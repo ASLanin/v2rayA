@@ -12,5 +12,12 @@ else
   version="unstable"
 fi
 # https://github.com/webpack/webpack/issues/14532#issuecomment-947012063
-cd "$CurrentDir"/gui && yarn --ignore-engines && OUTPUT_DIR="$CurrentDir"/service/server/router/web yarn --ignore-engines build
+cd "$CurrentDir"/gui
+yarnMajor=$(yarn --version | cut -d. -f1)
+if [ "$yarnMajor" -ge 2 ]; then
+  yarn install
+else
+  yarn install --ignore-engines
+fi
+OUTPUT_DIR="$CurrentDir"/service/server/router/web yarn run build
 cd "$CurrentDir"/service && CGO_ENABLED=0 go build -tags "with_gvisor" -ldflags "-X github.com/v2rayA/v2rayA/conf.Version=$version -s -w" -o "$CurrentDir"/v2raya
