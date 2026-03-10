@@ -52,7 +52,6 @@ type Template struct {
 	MultiObservatory *coreObj.MultiObservatory `json:"multiObservatory,omitempty"`
 	Observatory      *coreObj.ObservatoryItem  `json:"observatory,omitempty"`
 	API              *coreObj.APIObject        `json:"api,omitempty"`
-	Stats            *struct{}                 `json:"stats,omitempty"`
 
 	Variant               where.Variant          `json:"-"`
 	CoreVersion           string                 `json:"-"`
@@ -1725,12 +1724,6 @@ func (t *Template) SetAPI(serverData *ServerData) (port int, err error) {
 		"LoggerService",
 	}
 	services = slicex.Uniq(append(services, config.Api.Services...))
-	for _, service := range services {
-		if service == "StatsService" {
-			t.Stats = &struct{}{}
-			break
-		}
-	}
 	// observatory
 	if serverData != nil {
 		outbounds := t.outNames()
